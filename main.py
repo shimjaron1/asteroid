@@ -9,14 +9,22 @@ def main():
 	# initialize to start the game
 	pygame.init()
 
+	# Create groups to avoid manually calling methods
+	updateable = pygame.sprite.Group()
+	drawable = pygame.sprite.Group()
+
+	# Groups put into containers
+	Player.containers = (updateable,drawable)
+
 	# Generates the window
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
 	player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
 	# Create time object used to help control FPS
 	time = pygame.time.Clock()
 	dt = 0
+
+
 
 	# Set game loop condition
 	while True:
@@ -26,11 +34,15 @@ def main():
 			if event.type == pygame.QUIT:
 				return
 		
+		# Each update action of player
+		updateable.update(dt)
+
 		screen.fill("black")
 
 		# Draw player
-		player.draw(screen)
-		player.update(dt)
+		for object in drawable:
+			object.draw(screen)
+
 		# Method to refresh screen
 		pygame.display.flip()
 
