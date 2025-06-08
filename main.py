@@ -7,6 +7,7 @@ from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+from shot import Shot
 
 def main():
 	# initialize to start the game
@@ -16,6 +17,7 @@ def main():
 	updateable = pygame.sprite.Group()
 	drawable = pygame.sprite.Group()
 	asteroids = pygame.sprite.Group()
+	shots = pygame.sprite.Group()
 	
 
 	# Groups put into containers
@@ -23,9 +25,12 @@ def main():
 	Asteroid.containers = (asteroids,updateable,drawable)
 	AsteroidField.containers = (updateable)
 	asteroid_field = AsteroidField()
+	Shot.containers = (shots,updateable,drawable)
 
 	# Generates the window
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+	# Spawn Player
 	player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
 	# Create time object used to help control FPS
@@ -50,6 +55,10 @@ def main():
 			if asteroid.collision_check(player):
 				print("Game over!")
 				sys.exit()
+			for shot in shots:
+				if asteroid.collision_check(shot):
+					asteroid.split()
+					shot.kill()
 
 		screen.fill("black")
 
